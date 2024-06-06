@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import dataUsers from "../server/users.json";
 export const fetchUsers = createAsyncThunk(
   "fetch/users",
@@ -23,14 +22,19 @@ export const fetchUsers = createAsyncThunk(
 
 export const localStorAuthUser = (state) => (next) => (action) => {
   const nextAction = next(action);
-
   if (action.type === "fetch/users/fulfilled") {
     localStorage.setItem("auth", true);
-    localStorage.setItem("user", JSON.stringify(action.payload.username));
+    localStorage.setItem("user", JSON.stringify(action.payload));
   }
   if (action.type === "auth/logout") {
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
+  }
+  if (action.type === "event/setEvents") {
+    localStorage.setItem(
+      "events",
+      JSON.stringify(state.getState().events.events)
+    );
   }
   return nextAction;
 };
@@ -72,8 +76,8 @@ const AuthSlice = createSlice({
       state.error = "";
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.auth = true;
       state.user = action.payload;
+      state.auth = true;
       state.isLoading = false;
       state.error = "";
     });

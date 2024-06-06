@@ -6,3 +6,11 @@
 .h100 {
   padding: 20px 10px;
 }
+.container {
+  max-width: 800px;
+  max-height: 800px;
+}
+ul,
+li {
+  list-style: none;
+}
