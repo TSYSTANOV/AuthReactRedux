@@ -67,6 +67,17 @@ function EventForm({ modalOpen }) {
             required: true,
             message: "Required",
           },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              const dateNow = new Date();
+              if (
+                value.$d.toLocaleDateString() > dateNow.toLocaleDateString()
+              ) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error("The date is later before now"));
+            },
+          }),
         ]}
       >
         <DatePicker
